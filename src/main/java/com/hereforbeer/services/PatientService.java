@@ -173,4 +173,15 @@ public class PatientService {
                 .orElseThrow(() -> new BadRequestException(PATIENT_NOT_FOUND));
 
     }
+
+    public void checkOutPatient(String beaconId) {
+        Optional<Patient> patient = patientRepository.findOneByBeaconId(beaconId);
+
+        patient.ifPresent(p -> {
+            p.setOut(LocalDateTime.now());
+            patientRepository.save(p);
+        });
+
+        patient.orElseThrow(() -> new BadRequestException(PATIENT_NOT_FOUND));
+    }
 }

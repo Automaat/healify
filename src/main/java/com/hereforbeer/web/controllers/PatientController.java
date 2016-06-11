@@ -14,6 +14,7 @@ import java.util.List;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -46,6 +47,14 @@ public class PatientController {
     public ResponseEntity<List<PatientDTO>> getPatientsWithIds(@RequestBody List<String> beaconIds) {
 
         return new ResponseEntity<>(patientService.getAllPatientsWithIds(beaconIds), OK);
+    }
+
+    @RequestMapping(value = "patients/{id}/check-out", method = DELETE)
+    public ResponseEntity<?> checkOutPatient(@PathVariable("id") String beaconId){
+
+        patientService.checkOutPatient(beaconId);
+
+        return new ResponseEntity<>(OK);
     }
 
 }
