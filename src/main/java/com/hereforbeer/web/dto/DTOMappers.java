@@ -83,4 +83,18 @@ public class DTOMappers {
                 .unit(drugDTO.getUnit())
                 .build();
     }
+
+    public static CheckUp parseDtoToCheckUp(CheckUpDTO checkUpDTO) {
+        return CheckUp.builder()
+                .name(checkUpDTO.getName())
+                .date(LocalDateTime.now())
+                .build();
+    }
+
+    public static CheckUpDTO parseCheckUpToDTO(CheckUp checkUp) {
+        return CheckUpDTO.builder()
+                .name(checkUp.getName())
+                .date(checkUp.getDate().format(formatterLocalDateTime))
+                .build();
+    }
 }

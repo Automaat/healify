@@ -3,10 +3,7 @@ package com.hereforbeer.services;
 import com.hereforbeer.domain.*;
 import com.hereforbeer.repositories.PatientRepository;
 import com.hereforbeer.web.BadRequestException;
-import com.hereforbeer.web.dto.DTOMappers;
-import com.hereforbeer.web.dto.DrugDTO;
-import com.hereforbeer.web.dto.HealthStateDTO;
-import com.hereforbeer.web.dto.PatientDTO;
+import com.hereforbeer.web.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +15,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.hereforbeer.web.ErrorInfo.PATIENT_NOT_FOUND;
+import static java.util.stream.Collectors.*;
 import static java.util.stream.Collectors.toList;
 
 @Service
@@ -143,7 +141,36 @@ public class PatientService {
         Optional<Patient> patient = patientRepository.findOneByBeaconId(beaconId);
 
         return patient.map(p -> p.getDrugs().stream()
-                .map(DTOMappers::parseDrugtoDrugDTO).collect(Collectors.toList()))
+                .map(DTOMappers::parseDrugtoDrugDTO).collect(toList()))
                 .orElseThrow(() -> new BadRequestException(PATIENT_NOT_FOUND));
+    }
+
+    public void makeCheckUp(String beaconId, CheckUpDTO checkUpDTO) {
+        Optional<Patient> patient = patientRepository.findOneByBeaconId(beaconId);
+
+        patient.ifPresent(p -> {
+            List<CheckUp> checkUps = p.getCheckUps();
+
+            if (checkUps == null){
+                checkUps = new ArrayList<>();
+                p.setCheckUps(checkUps);
+            }
+
+            checkUps.add(DTOMappers.parseDtoToCheckUp(checkUpDTO));
+
+            patientRepository.save(p);
+        });
+
+        patient.orElseThrow(() -> new BadRequestException(PATIENT_NOT_FOUND));
+    }
+
+    public List<CheckUpDTO> getAllCheckUpsForPatient(String beaconId) {
+
+        Optional<Patient> patient = patientRepository.findOneByBeaconId(beaconId);
+
+        return patient.map(p -> p.getCheckUps().stream()
+                .map(DTOMappers::parseCheckUpToDTO).collect(toList()))
+                .orElseThrow(() -> new BadRequestException(PATIENT_NOT_FOUND));
+
     }
 }

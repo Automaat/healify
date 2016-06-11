@@ -38,4 +38,12 @@ public class HealthStateController {
 
         return new ResponseEntity<>(OK);
     }
+
+    @RequestMapping(value = "/patients/{id}", params = "pressure", method = PATCH, consumes = APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> updatePatientPressure(@PathVariable("id") String beaconId, @RequestParam("pressure") Integer value) {
+
+        patientService.updatePatientPressure(beaconId, value);
+
+        return new ResponseEntity<>(OK);
+    }
 }
