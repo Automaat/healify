@@ -14,9 +14,12 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.hereforbeer.web.ErrorInfo.PATIENT_NOT_FOUND;
+import static java.util.stream.Collectors.toList;
 
 @Service
 public class PatientService {
@@ -104,5 +107,13 @@ public class PatientService {
                     .add(new Pressure(value));
             patientRepository.save(p);
         });
+    }
+
+    public List<PatientDTO> getAllPatientsWithIds(List<String> beaconIds) {
+
+        return patientRepository.findByBeaconIdIn(beaconIds)
+                .stream()
+                .map(DTOMappers::parsePatientDTOFromPatient)
+                .collect(toList());
     }
 }

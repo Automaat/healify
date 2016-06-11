@@ -16,6 +16,7 @@ public class DTOMappers {
 
     public static PatientDTO parsePatientDTOFromPatient(Patient p) {
         return PatientDTO.builder()
+                .beaconId(p.getBeaconId())
                 .firstName(p.getFirstName())
                 .lastName(p.getLastName())
                 .address(p.getAddress())
