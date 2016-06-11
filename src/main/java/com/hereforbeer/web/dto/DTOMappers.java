@@ -1,12 +1,12 @@
 package com.hereforbeer.web.dto;
 
-import com.hereforbeer.domain.HealthState;
-import com.hereforbeer.domain.Patient;
-import com.hereforbeer.domain.Pressure;
-import com.hereforbeer.domain.Temperature;
+import com.hereforbeer.domain.*;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class DTOMappers {
 
@@ -25,6 +25,21 @@ public class DTOMappers {
                 .in(p.getIn().format(formatterLocalDateTime))
                 .pesel(p.getPesel())
                 .birthDate(p.getBirthDate().format(formatterLocalDate))
+                .build();
+    }
+
+    private static List<DrugDTO> parseDrugListToDrugDTOs(List<Drug> drugs) {
+        return drugs.stream()
+                .map(DTOMappers::parseDrugtoDrugDTO)
+                .collect(Collectors.toList());
+    }
+
+    public static DrugDTO parseDrugtoDrugDTO(Drug drug){
+        return DrugDTO.builder()
+                .name(drug.getName())
+                .quantity(drug.getQuantity() + "")
+                .unit(drug.getUnit())
+                .date(drug.getDate().format(formatterLocalDateTime))
                 .build();
     }
 
@@ -58,5 +73,14 @@ public class DTOMappers {
         pressure.ifPresent(t -> healthStateDTO.setPressure(t.getValue()));
 
         return healthStateDTO;
+    }
+
+    public static Drug parseDrugDtoToDrug(DrugDTO drugDTO) {
+        return Drug.builder()
+                .date(LocalDateTime.now())
+                .name(drugDTO.getName())
+                .quantity(Integer.parseInt(drugDTO.getQuantity()))
+                .unit(drugDTO.getUnit())
+                .build();
     }
 }

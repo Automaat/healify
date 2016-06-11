@@ -1,12 +1,10 @@
 package com.hereforbeer.services;
 
-import com.hereforbeer.domain.HealthState;
-import com.hereforbeer.domain.Patient;
-import com.hereforbeer.domain.Pressure;
-import com.hereforbeer.domain.Temperature;
+import com.hereforbeer.domain.*;
 import com.hereforbeer.repositories.PatientRepository;
 import com.hereforbeer.web.BadRequestException;
 import com.hereforbeer.web.dto.DTOMappers;
+import com.hereforbeer.web.dto.DrugDTO;
 import com.hereforbeer.web.dto.HealthStateDTO;
 import com.hereforbeer.web.dto.PatientDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -107,6 +106,8 @@ public class PatientService {
                     .add(new Pressure(value));
             patientRepository.save(p);
         });
+
+        patient.orElseThrow(() -> new BadRequestException(PATIENT_NOT_FOUND));
     }
 
     public List<PatientDTO> getAllPatientsWithIds(List<String> beaconIds) {
@@ -115,5 +116,34 @@ public class PatientService {
                 .stream()
                 .map(DTOMappers::parsePatientDTOFromPatient)
                 .collect(toList());
+    }
+
+    public void giveDrugToPatient(String beaconId, DrugDTO drugDTO) {
+
+        Optional<Patient> patient = patientRepository.findOneByBeaconId(beaconId);
+
+        patient.ifPresent(p -> {
+            List<Drug> drugs = p.getDrugs();
+
+            if(drugs == null) {
+                drugs = new ArrayList<>();
+                p.setDrugs(drugs);
+            }
+
+            drugs.add(DTOMappers.parseDrugDtoToDrug(drugDTO));
+
+            patientRepository.save(p);
+        });
+
+        patient.orElseThrow(() -> new BadRequestException(PATIENT_NOT_FOUND));
+
+    }
+
+    public List<DrugDTO> getAllInjectedDrugsForPatient(String beaconId) {
+        Optional<Patient> patient = patientRepository.findOneByBeaconId(beaconId);
+
+        return patient.map(p -> p.getDrugs().stream()
+                .map(DTOMappers::parseDrugtoDrugDTO).collect(Collectors.toList()))
+                .orElseThrow(() -> new BadRequestException(PATIENT_NOT_FOUND));
     }
 }

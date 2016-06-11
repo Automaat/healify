@@ -29,5 +29,5 @@ public class PatientDTO {
     private String doctor;
     private HealthStateDTO healthState;
     private List<CheckUpDTO> checkUps;
-    private List<DrugDTO> drug;
+    private List<DrugDTO> drugs;
 }
