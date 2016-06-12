@@ -1,22 +1,18 @@
 package com.hereforbeer.web.controllers;
 
+import com.hereforbeer.domain.Patient;
 import com.hereforbeer.services.PatientService;
 import com.hereforbeer.web.dto.PatientDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RestController
 @RequestMapping("/api")
@@ -49,12 +45,24 @@ public class PatientController {
         return new ResponseEntity<>(patientService.getAllPatientsWithIds(beaconIds), OK);
     }
 
-    @RequestMapping(value = "patients/{id}/check-out", method = DELETE)
-    public ResponseEntity<?> checkOutPatient(@PathVariable("id") String beaconId){
+    @RequestMapping(value = "/patients/{id}/check-out", method = DELETE)
+    public ResponseEntity<?> checkOutPatient(@PathVariable("id") String beaconId) {
 
         patientService.checkOutPatient(beaconId);
 
         return new ResponseEntity<>(OK);
+    }
+
+    @RequestMapping(value = "/patients", method = GET, produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<PatientDTO>> getAllPatients() {
+
+        return new ResponseEntity<>(patientService.getAllPatients(), OK);
+    }
+
+    @RequestMapping(value = "/patients", params = "id", method = GET, produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<PatientDTO> getPatientByDatabaseId(@RequestParam("id") String id){
+
+        return new ResponseEntity<>(patientService.getById(id), OK);
     }
 
 }

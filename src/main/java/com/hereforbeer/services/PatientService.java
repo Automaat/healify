@@ -12,10 +12,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static com.hereforbeer.web.ErrorInfo.PATIENT_NOT_FOUND;
-import static java.util.stream.Collectors.*;
 import static java.util.stream.Collectors.toList;
 
 @Service
@@ -50,7 +48,7 @@ public class PatientService {
     public PatientDTO getPatientByBeaconId(String beaconId) {
 
         return patientRepository.findOneByBeaconId(beaconId)
-                .map(DTOMappers::parsePatientDTOFromPatient)
+                .map(DTOMappers::parsePatientToDTO)
                 .orElseThrow(() -> new BadRequestException(PATIENT_NOT_FOUND));
     }
 
@@ -62,7 +60,7 @@ public class PatientService {
     }
 
     private LocalDate getDateFromPesel(String pesel) {
-        if (pesel != null){
+        if (pesel != null) {
             String dateFromPesel = pesel.substring(0, 6);
 
             int year = Integer.parseInt(dateFromPesel.substring(0, 2));
@@ -112,7 +110,7 @@ public class PatientService {
 
         return patientRepository.findByBeaconIdIn(beaconIds)
                 .stream()
-                .map(DTOMappers::parsePatientDTOFromPatient)
+                .map(DTOMappers::parsePatientToDTO)
                 .collect(toList());
     }
 
@@ -123,7 +121,7 @@ public class PatientService {
         patient.ifPresent(p -> {
             List<Drug> drugs = p.getDrugs();
 
-            if(drugs == null) {
+            if (drugs == null) {
                 drugs = new ArrayList<>();
                 p.setDrugs(drugs);
             }
@@ -141,7 +139,7 @@ public class PatientService {
         Optional<Patient> patient = patientRepository.findOneByBeaconId(beaconId);
 
         return patient.map(p -> p.getDrugs().stream()
-                .map(DTOMappers::parseDrugtoDrugDTO).collect(toList()))
+                .map(DTOMappers::parseDrugToDrugDTO).collect(toList()))
                 .orElseThrow(() -> new BadRequestException(PATIENT_NOT_FOUND));
     }
 
@@ -151,7 +149,7 @@ public class PatientService {
         patient.ifPresent(p -> {
             List<CheckUp> checkUps = p.getCheckUps();
 
-            if (checkUps == null){
+            if (checkUps == null) {
                 checkUps = new ArrayList<>();
                 p.setCheckUps(checkUps);
             }
@@ -183,5 +181,17 @@ public class PatientService {
         });
 
         patient.orElseThrow(() -> new BadRequestException(PATIENT_NOT_FOUND));
+    }
+
+    public List<PatientDTO> getAllPatients() {
+        return patientRepository.findAll().stream()
+                .map(DTOMappers::parsePatientToDTO)
+                .collect(toList());
+    }
+
+    public PatientDTO getById(String id) {
+        return patientRepository.findOneById(id)
+                .map(DTOMappers::parsePatientToDTOExtended)
+                .orElseThrow(() -> new BadRequestException(PATIENT_NOT_FOUND));
     }
 }

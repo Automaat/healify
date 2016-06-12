@@ -14,8 +14,9 @@ public class DTOMappers {
     private static DateTimeFormatter formatterLocalDateTime = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
 
 
-    public static PatientDTO parsePatientDTOFromPatient(Patient p) {
+    public static PatientDTO parsePatientToDTO(Patient p) {
         return PatientDTO.builder()
+                .id(p.getId())
                 .beaconId(p.getBeaconId())
                 .firstName(p.getFirstName())
                 .lastName(p.getLastName())
@@ -30,17 +31,23 @@ public class DTOMappers {
 
     private static List<DrugDTO> parseDrugListToDrugDTOs(List<Drug> drugs) {
         return drugs.stream()
-                .map(DTOMappers::parseDrugtoDrugDTO)
+                .map(DTOMappers::parseDrugToDrugDTO)
                 .collect(Collectors.toList());
     }
 
-    public static DrugDTO parseDrugtoDrugDTO(Drug drug){
+    public static DrugDTO parseDrugToDrugDTO(Drug drug) {
         return DrugDTO.builder()
                 .name(drug.getName())
                 .quantity(drug.getQuantity() + "")
                 .unit(drug.getUnit())
                 .date(drug.getDate().format(formatterLocalDateTime))
                 .build();
+    }
+
+    private static List<CheckUpDTO> parseListToCheckUpDTOs(List<CheckUp> checkUps) {
+        return checkUps.stream()
+                .map(DTOMappers::parseCheckUpToDTO)
+                .collect(Collectors.toList());
     }
 
     public static HealthStateDTO parseHealthSateFromPatient(HealthState healthState) {
@@ -95,6 +102,24 @@ public class DTOMappers {
         return CheckUpDTO.builder()
                 .name(checkUp.getName())
                 .date(checkUp.getDate().format(formatterLocalDateTime))
+                .build();
+    }
+
+    public static PatientDTO parsePatientToDTOExtended(Patient patient) {
+        return PatientDTO.builder()
+                .id(patient.getId())
+                .beaconId(patient.getBeaconId())
+                .firstName(patient.getFirstName())
+                .lastName(patient.getLastName())
+                .address(patient.getAddress())
+                .doctor(patient.getDoctor())
+                .disease(patient.getDisease())
+                .in(patient.getIn().format(formatterLocalDateTime))
+                .pesel(patient.getPesel())
+                .birthDate(patient.getBirthDate().format(formatterLocalDate))
+                .drugs(parseDrugListToDrugDTOs(patient.getDrugs()))
+                .checkUps(parseListToCheckUpDTOs(patient.getCheckUps()))
+                .healthState(parseHealthSateFromPatient(patient.getHealthState()))
                 .build();
     }
 }
