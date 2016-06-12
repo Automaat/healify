@@ -1,6 +1,5 @@
 package com.hereforbeer.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -9,9 +8,9 @@ import java.time.LocalDateTime;
 public class Temperature {
 
     private LocalDateTime date;
-    private int value;
+    private double value;
 
-    public Temperature(int value){
+    public Temperature(int value) {
         this.date = LocalDateTime.now();
         this.value = value;
     }

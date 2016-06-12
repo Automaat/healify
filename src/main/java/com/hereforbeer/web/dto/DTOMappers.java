@@ -124,7 +124,7 @@ public class DTOMappers {
                 .build();
     }
 
-    public static List<TemperatureDTO> parseTemperturesFromPatient(Patient patient) {
+    public static List<TemperatureDTO> parseTemperaturesFromPatient(Patient patient) {
         return patient.getHealthState()
                 .getTemperatures()
                 .stream()

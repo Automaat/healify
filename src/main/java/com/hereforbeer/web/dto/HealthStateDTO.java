@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class HealthStateDTO {
 
-    private int temperature;
+    private double temperature;
     private int pressure;
 }

@@ -200,7 +200,7 @@ public class PatientService {
 
         Optional<Patient> patient = patientRepository.findOneByBeaconId(beaconId);
 
-        return patient.map(DTOMappers::parseTemperturesFromPatient)
+        return patient.map(DTOMappers::parseTemperaturesFromPatient)
                 .orElseThrow(() -> new BadRequestException(PATIENT_NOT_FOUND));
     }
 }
