@@ -10,7 +10,7 @@ public class Temperature {
     private LocalDateTime date;
     private double value;
 
-    public Temperature(int value) {
+    public Temperature(double value) {
         this.date = LocalDateTime.now();
         this.value = value;
     }

@@ -74,7 +74,7 @@ public class PatientService {
     }
 
 
-    public void updatePatientTemperature(String beaconId, Integer value) {
+    public void updatePatientTemperature(String beaconId, Double value) {
 
         Optional<Patient> patient = patientRepository.findOneByBeaconId(beaconId);
 
