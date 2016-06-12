@@ -74,7 +74,7 @@ public class PatientService {
     }
 
 
-    public void updatePatientTemperature(String beaconId, Double value) {
+    public void updatePatientTemperature(String beaconId, String value) {
 
         Optional<Patient> patient = patientRepository.findOneByBeaconId(beaconId);
 
@@ -85,7 +85,7 @@ public class PatientService {
                 p.setHealthState(healthState);
             }
 
-            healthState.getTemperatures().add(new Temperature(value));
+            healthState.getTemperatures().add(new Temperature(Double.parseDouble(value)));
 
 
             patientRepository.save(p);
