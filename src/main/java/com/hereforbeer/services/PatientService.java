@@ -177,6 +177,7 @@ public class PatientService {
 
         patient.ifPresent(p -> {
             p.setOut(LocalDateTime.now());
+            p.setBeaconId(null);
             patientRepository.save(p);
         });
 
