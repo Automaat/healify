@@ -12,5 +12,6 @@ import lombok.NoArgsConstructor;
 public class CheckUpDTO {
 
     private String name;
+    private String result;
     private String date;
 }

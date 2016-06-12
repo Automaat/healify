@@ -11,4 +11,5 @@ public class CheckUp {
 
     private String name;
     private LocalDateTime date;
+    private String result;
 }

@@ -95,6 +95,7 @@ public class DTOMappers {
     public static CheckUp parseDtoToCheckUp(CheckUpDTO checkUpDTO) {
         return CheckUp.builder()
                 .name(checkUpDTO.getName())
+                .result(checkUpDTO.getResult())
                 .date(LocalDateTime.now())
                 .build();
     }
@@ -102,6 +103,7 @@ public class DTOMappers {
     public static CheckUpDTO parseCheckUpToDTO(CheckUp checkUp) {
         return CheckUpDTO.builder()
                 .name(checkUp.getName())
+                .result(checkUp.getResult())
                 .date(checkUp.getDate().format(formatterLocalDateTime))
                 .build();
     }
