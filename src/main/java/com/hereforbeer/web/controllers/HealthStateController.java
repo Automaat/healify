@@ -34,7 +34,7 @@ public class HealthStateController {
         return new ResponseEntity<>(patientService.getPatientHealthState(beaconId), OK);
     }
 
-    @RequestMapping(value = "/patients/{id}", params = "temperature", method = PATCH, consumes = APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/patients/{id}", params = "temperature", method = PATCH)
     public ResponseEntity<?> updatePatientTemperature(@PathVariable("id") String beaconId, @RequestParam("temperature") String value) {
 
         patientService.updatePatientTemperature(beaconId, value);
