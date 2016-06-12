@@ -6,7 +6,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 public class DTOMappers {
 
@@ -32,7 +33,7 @@ public class DTOMappers {
     private static List<DrugDTO> parseDrugListToDrugDTOs(List<Drug> drugs) {
         return drugs.stream()
                 .map(DTOMappers::parseDrugToDrugDTO)
-                .collect(Collectors.toList());
+                .collect(toList());
     }
 
     public static DrugDTO parseDrugToDrugDTO(Drug drug) {
@@ -47,7 +48,7 @@ public class DTOMappers {
     private static List<CheckUpDTO> parseListToCheckUpDTOs(List<CheckUp> checkUps) {
         return checkUps.stream()
                 .map(DTOMappers::parseCheckUpToDTO)
-                .collect(Collectors.toList());
+                .collect(toList());
     }
 
     public static HealthStateDTO parseHealthSateFromPatient(HealthState healthState) {
@@ -120,6 +121,21 @@ public class DTOMappers {
                 .drugs(parseDrugListToDrugDTOs(patient.getDrugs()))
                 .checkUps(parseListToCheckUpDTOs(patient.getCheckUps()))
                 .healthState(parseHealthSateFromPatient(patient.getHealthState()))
+                .build();
+    }
+
+    public static List<TemperatureDTO> parseTemperturesFromPatient(Patient patient) {
+        return patient.getHealthState()
+                .getTemperatures()
+                .stream()
+                .map(DTOMappers::parseTemperatureToDTO)
+                .collect(toList());
+    }
+
+    private static TemperatureDTO parseTemperatureToDTO(Temperature temperature) {
+        return TemperatureDTO.builder()
+                .date(temperature.getDate().format(formatterLocalDateTime))
+                .value(temperature.getValue() + "")
                 .build();
     }
 }

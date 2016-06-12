@@ -195,4 +195,12 @@ public class PatientService {
                 .map(DTOMappers::parsePatientToDTOExtended)
                 .orElseThrow(() -> new BadRequestException(PATIENT_NOT_FOUND));
     }
+
+    public List<TemperatureDTO> getAllTemperaturesForPatient(String beaconId) {
+
+        Optional<Patient> patient = patientRepository.findOneByBeaconId(beaconId);
+
+        return patient.map(DTOMappers::parseTemperturesFromPatient)
+                .orElseThrow(() -> new BadRequestException(PATIENT_NOT_FOUND));
+    }
 }

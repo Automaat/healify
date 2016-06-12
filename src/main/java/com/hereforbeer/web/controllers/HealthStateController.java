@@ -2,12 +2,15 @@ package com.hereforbeer.web.controllers;
 
 import com.hereforbeer.services.PatientService;
 import com.hereforbeer.web.dto.HealthStateDTO;
+import com.hereforbeer.web.dto.TemperatureDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -45,5 +48,11 @@ public class HealthStateController {
         patientService.updatePatientPressure(beaconId, value);
 
         return new ResponseEntity<>(OK);
+    }
+
+    @RequestMapping(value = "/patients/{id}/temperatures", method = GET, produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<TemperatureDTO>> getAllTemperaturesForPatient(@PathVariable("id") String beaconId){
+
+        return new ResponseEntity<>(patientService.getAllTemperaturesForPatient(beaconId), OK);
     }
 }
